@@ -15,3 +15,24 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* styles.css */
+.calculator {
+  background-color: #f3f3f3;
+  border-radius: 10px;
+  padding: 20px;
+  width: 320px;
+  margin: 0 auto;
+}
+
+.display {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 36px;
+  height: 80px;
+  line-height: 80px;
+  margin-bottom: 10px;
+  padding: 0 10px;
+  text-align: right;
+}
