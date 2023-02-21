@@ -4,6 +4,8 @@ import Button from './Button';
 import Display from './Display';
 import ResultButton from './ResultButton';
 
+import './index.css';
+
 function App() {
   const [displayValue, setDisplayValue] = useState('0');
 
@@ -19,10 +21,62 @@ function App() {
           }
         });
         break;
+
+      case 'AC':
+        setDisplayValue('0');
+        break;
+
+
       case '=':
         // Evaluate expression in displayValue
+
+        if(displayValue.includes('!')){
+          const factorial = (n: number) => {
+            if (n === 0 || n === 1)
+              return 1;
+            for (var i = n - 1; i >= 1; i--) {
+              n *= i;
+            }
+            return n;
+          }
+          const result = factorial(Number(displayValue.slice(0, -1)));
+          setDisplayValue(result.toString());
+        }
+
+
+        if(displayValue.includes('√')){
+          // the display value can be √9 OR √(9) -- must be able to answer both
+          let result = 0;
+
+          if(displayValue.includes('(')){
+            const displayValueWithoutParentheses = displayValue.slice(2, -1);
+            result = Math.sqrt(Number(displayValueWithoutParentheses));
+          } else {
+            result = Math.sqrt(Number(displayValue.slice(1)));
+          }
+
+          setDisplayValue(result.toString());
+        }
+
+        if(displayValue.includes('Log')){
+          const result = Math.log10(Number(displayValue.slice(3)));
+          setDisplayValue(result.toString());
+        }
+
+        if (displayValue.includes('cos')) {
+          const result = Math.cos(Number(displayValue.slice(3)));
+          setDisplayValue(result.toString());
+        }
+
+        if (displayValue.includes('sin')) {
+          const result = Math.sin(Number(displayValue.slice(3)));
+          setDisplayValue(result.toString());
+        }
+
+        
+
         try {
-          const result = eval(displayValue).toFixed(4);
+          const result = Math.round((eval(displayValue) + Number.EPSILON) * 100) / 100
           setDisplayValue(result.toString());
         } catch (error) {
           console.error('Invalid expression');
@@ -40,15 +94,21 @@ function App() {
       
       case 'sin':
         setDisplayValue(prevValue => {
-          const sinValue = Math.sin(Number(prevValue));
-          return sinValue.toFixed(4).toString();
+          if (prevValue === '0') {
+            return 'sin ';
+          } else {
+            return 'sin(' + prevValue + ')';
+          }
         });
         break;
 
       case 'cos':
         setDisplayValue(prevValue => {
-          const cosValue = Math.cos(Number(prevValue));
-          return cosValue.toFixed(4).toString();
+          if (prevValue === '0') {
+            return 'cos ';
+          } else {
+            return 'cos(' + prevValue + ')';
+          }
         });
         break;
 
@@ -61,8 +121,11 @@ function App() {
 
       case 'Log':
         setDisplayValue(prevValue => {
-          const LogValue = Math.log10(Number(prevValue));
-          return LogValue.toFixed(4).toString();
+          if (prevValue === '0') {
+            return 'Log';
+          } else {
+            return 'Log' + prevValue;
+          }
         });
         break;
 
@@ -76,6 +139,29 @@ function App() {
           }
         });
         break;
+      
+      case '!':
+        setDisplayValue(prevValue => {
+          if (prevValue === '0') {
+            return '0';
+          } else {
+            return prevValue + '!';
+          }
+        });
+        break;
+
+
+      case '√ ':
+        setDisplayValue(prevValue => {
+          if (prevValue === '0') {
+            return '√';
+          } else {
+            return '√(' + prevValue + ')';
+          }
+        });
+        break;
+
+
 
       default:
         // Append clicked button label to displayValue
@@ -91,7 +177,7 @@ function App() {
 
 
   return (
-    <div className="w-1000 max-w-md mx-auto mt-2">
+    <div className="rounded-full calculator w-1000 max-w-md mx-auto mt-2">
       <Display value={displayValue} />
 
       <div className="grid grid-cols-7">
@@ -213,7 +299,7 @@ function App() {
         <Button
           label="0"
           type="number"
-          onClick={() => handleButtonClick('2')}
+          onClick={() => handleButtonClick('0')}
         />
         <Button
           label="."
@@ -225,6 +311,13 @@ function App() {
           type="operator"
           onClick={() => handleButtonClick('DEL')}
         />
+
+        <Button
+          label="AC"
+          type="operator"
+          onClick={() => handleButtonClick('AC')}
+        />
+
         <ResultButton label="=" onClick={() => handleButtonClick('=')} />
       </div>
     </div>
