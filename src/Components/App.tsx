@@ -3,8 +3,7 @@ import React, { useState } from 'react';
 import Button from './Button';
 import Display from './Display';
 import ResultButton from './ResultButton';
-
-import './index.css';
+import '../index.css';
 
 function App() {
   const [displayValue, setDisplayValue] = useState('0');
@@ -73,15 +72,24 @@ function App() {
           setDisplayValue(result.toString());
         }
 
-        
-
+        if(displayValue.includes('ln')){
+          if (displayValue.includes('ln(')) {
+            const result = Math.log(Number(displayValue.slice(3, -1)));
+            setDisplayValue(result.toString());
+          } else {
+          const result = Math.log(Number(displayValue.slice(2)));
+            setDisplayValue(result.toString());
+          }
+        }
         try {
           const result = Math.round((eval(displayValue) + Number.EPSILON) * 100) / 100
           setDisplayValue(result.toString());
         } catch (error) {
           console.error('Invalid expression');
         }
+
         break;
+
       case 'π':
         setDisplayValue(prevValue => {
           if (prevValue === '0') {
@@ -114,8 +122,11 @@ function App() {
 
       case 'ln':
         setDisplayValue(prevValue => {
-          const lnValue = Math.log(Number(prevValue));
-          return lnValue.toFixed(4).toString();
+          if (prevValue === '0') {
+            return 'ln ';
+          } else {
+            return 'ln(' + prevValue + ')';
+          }
         });
         break;
 
@@ -174,7 +185,6 @@ function App() {
         });
     }
   };
-
 
   return (
     <div className="rounded-full calculator w-1000 max-w-md mx-auto mt-2">
