@@ -3,7 +3,7 @@ import React from 'react';
 type Props = {
     label: string;
     onClick: () => void;
-    type?: 'operator' | 'number' | 'result';
+    type?: 'operator' | 'number' | 'result' | string;
 };
 
 function Button(props: Props) {
