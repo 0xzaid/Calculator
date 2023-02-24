@@ -166,12 +166,12 @@ export const handleButtonClick = (label: string, displayValue: string, setDispla
 
         default:
             // Append clicked button label to displayValue
-            setDisplayValue(prevValue => {
-                if (prevValue === '0') {
-                    return label;
-                } else {
-                    return prevValue + label;
-                }
-            });
+            if (displayValue === "0") {
+                setDisplayValue(label);
+            } else if (displayValue === "Error") {
+                setDisplayValue(label);
+            } else {
+                setDisplayValue((prevValue) => prevValue + label);
+            }
     }
 };

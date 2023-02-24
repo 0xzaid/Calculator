@@ -1,5 +1,5 @@
 // src/components/Calculator.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Button from './Button';
 import Display from './Display';
 import ResultButton from './ResultButton';
@@ -10,9 +10,28 @@ import '../index.css';
 function App() {
   const [displayValue, setDisplayValue] = useState('0');
 
-  const handleClick = (label: string) => {
+  const handleClick = useCallback((label: string) => {
     handleButtonClick(label, displayValue, setDisplayValue);
-  };
+  }, [displayValue]);
+
+  const handleKeyDown = useCallback((event: KeyboardEvent) => {
+    const key = event.key;
+
+    if (key === 'Enter') {
+      handleClick('=');
+    } else if (key === 'Backspace') {
+      handleClick('DEL');
+    } else if (/^[0-9+\-*/.()!^]$/.test(key)) {
+      handleClick(key);
+    }
+  }, [handleClick]);
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [handleKeyDown]);
 
   const buttonData = [
     { label: "sin", type: "operator", onClick: () => handleClick('sin') },
